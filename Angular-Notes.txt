@@ -1,0 +1,198 @@
+# Angular-Works
+Exercising angular from basics
+1. Angular CLI - command line interface
+    1.1 - ng new <project name>
+    1.2 - ng --version
+    1.3 - ng generate / generate
+            - component <component name>
+            - service <service name>
+            - module <module name>
+            - pipe <name>
+    1.4 - ng serve - used for transpiling and compiling the application. ng serve --port 4300 - this will open the appln in 4300 port
+    1.5 - ng test - will run all the test cases using karma runner. Unit test cases are written using jasmine runner.
+    1.6 - ng update - will update the dependencies based on package.json build and generate the output of appln. compile source code to javascript code.used to create dist folder to move it to higher environment.
+    1.7 - ng build - build and generate the output of appln. compile source code to javascript code.used to create dist folder to promote it to higher environment.
+    1.8 - ng lint - set rule to follow coding standards
+    1.9 - 
+2. Module - Module in Angular refers to a place where you can group the components, directives, pipes, and services,
+   which are related to the application.Single specific domain like user information register, logging , authentication etc.
+   It is said to be logical grouping. user module can have component group such as register,forgot, sign in etc
+   2.1 - Every app must have atleast one module and should define inside ng module
+        @NgModule({
+            declarations: [
+                AppComponent
+            ],
+            imports: [
+                BrowserModule,
+                AppRoutingModule
+            ],
+            providers: [],
+            bootstrap: [AppComponent]
+            })
+    2.2 - A module contains declaration of components, pipe ,directives etc. imports of other dependency module.
+    2.3 - It can have the first component to bootstrap
+3. Decorators:-
+    Decorators are functions that are invoked with a prefixed @ symbol, and are immediately followed by a class, method or property. 
+    They allow a service, directive or filter to be changed before being used.
+    Basically, a decorator provides configuration metadata that determines how the component, class or a function should be processed, instantiated and used at runtime. 
+    3.1 class level - @component, method level - @hostlistener, attribute level - @Input
+4. Components:- 
+    Components are the most basic UI building block of an Angular app.
+    App component is a first component to get loaded
+    It has three configuration meta data in the decorator - selector , templateUrl, stylesUrl
+    To call any component we will use selector name
+5. Directives:- 
+   5.1- The Angular directive helps us to manipulate the DOM. You can change the appearance, behavior, or layout of a DOM element using the Directives.
+        They help you to extend HTML
+   5.2 - Three kind of directives in angular - Component, structure & attribute.
+        5.2.1 - Component directives are used in main class.It contains the detail of how the component should be processed, initiated
+        and used at runtime.
+        5.2.2 - Strutural directives Structural directives start with a * sign. These directives are used to manipulate and change the structure of the DOM elements.
+         For example, *ngIf directive, *ngSwitch directive, and *ngFor directive.
+        5.2.3 - Attribute Directives: Attribute directives are used to change the look and behavior of the DOM elements. For example: ngClass directive, and ngStyle directive etc
+    5.3 - *ngIf - 
+          <div *ngIf="showStatement">Show Statement</div>  
+          5.3.1 - ngIf with elements
+                    <div *ngIf="showMe;else showMessage">If Statement</div>
+                    <ng-template #showMessage><div>showing else message</div></ng-template>
+          5.3.2 - ngIf with then and else statment
+                    <div *ngIf="showMe then thenBlock else showMessage">If Statement</div>
+                    <ng-template #showMessage><div>showing else message</div></ng-template>
+                    <ng-template #thenBlock><div>showing then block message</div></ng-template>
+    5.4 - *ngSwitch - ngSwitchCase - ngSwitchDefault
+        <div [ngSwitch]="switchValue">
+            <div *ngSwitchCase="1">The value is one</div>
+            <div *ngSwitchCase="2">The value is two</div>
+            <div *ngSwitchCase="3">The value is three</div>
+            <div *ngSwitchDefault>This is the default value</div>
+        </div>
+    5.5 - *ngFor - 
+            <tr *ngFor="let user of users;index as i;first as f;last as l;odd as o;even as e">
+                <td>{{user.userId | uppercase}}</td>
+                <td>{{user.firstName}}</td>
+                <td>, Index: {{i}}</td>
+                <td>, First: {{f}}</td>
+                <td>, last: {{l}}</td>
+                <td>, odd: {{o}}</td>
+                <td>, even: {{e}}</td>
+            </tr>
+    5.6 - ngStyle -
+            <div [ngStyle]="{'color':'red'}">Learning angular is fun</div>
+             <div [ngStyle]="{'color':colorVal}">Learning angular is fun</div> - style attribute value as dynamic variable
+    5.7 - ngClass -
+            <div [ngClass]="'one'">Learning angular is fun</div> 
+            dynamic - <div [ngClass]="[className1,className2]">Learning angular is fun</div> 
+                     <div [ngClass]="'one':true, 'two':false">Learning angular is fun</div>    
+6.  Data binding - it means to bind the data from view (template) to controller (component) and communicate each other.
+    6.1 - TYpes of data binding 
+        One Way data binding
+            Component to view - 
+                Interpolation 
+                    Syntax for defining interpolation is double curly braces {{variable name}}
+                property binding
+                    syntax for defining property binding - [property]="expression" -  <div [ngStyle]="{'color':colorVal}">
+                attribute binding
+                    <input [attr.disabled]="disabled ? '' : null"/>
+                style binding
+            view to component
+                Event binding
+                    <button (click)="readMe()">Read Me</button> - click event
+        Two way data binding  - data flow from view to component and back to component from the view.
+                Syntax for defining two way data binding - [(ngModel)] = "data"
+                <input type="text" [(ngModel)] = "oneName"/>
+7.  Pipes - 
+        Pipes are used to transform the data. pipes wil take input and convert/transform into desired format.
+        Operator used - | .
+        7.1 Built in pipes  
+            lowercase
+            uppercase
+            currency
+            date
+            example - 
+                    <td>{{user.userId | uppercase}}</td>
+                    <td>{{user.firstName | lowercase}}</td>
+                    <td>{{user.dob | date: 'MMMM dd'}}</td>
+                    <td>{{user.salary | currency: 'INR'}}</td>
+                    <td>, Index: {{i}}</td>
+                    <td>, First: {{f}}</td>
+                    <td>, last: {{l}}</td>
+                    <td>, odd: {{o}}</td>
+                    <td>, even: {{e}}</td>
+                    <td>{{user | json}}</td>
+        7.2 Parameterised pipes - we can pass one or more parameter to pipes
+            Currency - 
+                code - <td>{{user.salary | currency: 'INR' : 'code'}}</td> - INR120,000.00
+                digit variation - {{user.salary | currency: 'INR' : '4.0-1'}}</td> - here 4 is the digit before precision. 0-1 after preision
+                symbol - <td>{{user.salary | currency: 'INR'}}</td> - ₹120,000.00	
+            Date - 
+                short
+                medium
+                long 
+                full
+                shortdate
+                mediumdate
+                longdate
+                fulldate
+                shorttime
+                mediumtime
+                longtime
+                fulltime
+        7.3 Chaining pipes - <td>{{user.dob | date: 'long' | uppercase}}</td>
+        7.4 Custom pipes -  ng generate pipe <pipename> - <div>{{user.city | highlight : user.city}}</div>
+8. Routes - It is a mechanism to manage paths and routes. It helps to navigate b/w various views in angular apps
+    8.1 Routing Strategy
+        PathLocationStrategy - default example - /home , /product
+        HashLocationStrategy - # in the url - /#/home, /#/product - http://localhost:4200/#/
+    8.2 Base Href
+        Angular app is single page architecture means there will be only one HTML
+        base href is set to "/" the root folder in index.html - it is like context root in spring boot.
+        example - www.aaa.com/demo - /demo - bease href
+        configure - ng build --base-href="/demo/"
+    8.3 Routing Module - It is a placeholder for configuring all routes and navigation in one module
+        - command to generate app-routing-module - ng generate module app-routing --flat --module=app
+           const routes: Routes = [
+        {path:"",redirectTo:"enroll",pathMatch:"full"},
+        {path:"**",redirectTo:"enroll",pathMatch:"full"},
+        ];
+    8.4 - Router-outlet - tells you whre the output should be displayed
+    8.5 - Route configure - 
+            Path - 
+                const routes: Routes = [
+                    {path:"",redirectTo:"enroll",pathMatch:"full"},
+                    {path:"**",redirectTo:"pagenotfound"},
+                    { path: 'products', component:  ProductsComponent},
+                    { path: 'product-view', component:ProductViewComponent},
+                    {path:'product-edit', component:ProductEditComponent},
+                    {path:'product-id/:id',component:Product} - route param
+                    ];
+                    this.activatedRoute.queryParams.subscribe(data=>{
+                        this.paramQuery = data.query;
+                        });
+            component - 
+            redirectTo -  {path:"",redirectTo:"product-view",pathMatch:"full"},
+            children/child routes - {path:'products', children: [
+                                    {path:'product-view',component:ProductViewComponent}
+                                ]} - declaration
+                                 {path:"",redirectTo:"products/product-view",pathMatch:"full"}, - to access
+            QueryParam -  this.activatedRoute.queryParams.subscribe(data=>{
+                    this.paramQuery = data.query;
+                    });
+            pagenotfound - {path:"**",redirectTo:"pagenotfound"},
+            Lazyloading - load module only when the user us requested
+                        ng g module orders --route orders --module  app.module - this will create child route from app module to orders
+            Route Guards - allows us to restrict user do not to access routes or paths
+                    if the user is not logged in then the user cannot see order route/path
+                    1. CanActivate - Checks to see if a user can visit a route
+                        {path:'admin',component:AdminHomeComponent, canActivate: [AdminGuardGuard]}
+                    2. CanActivateChild - Checks to see if a user can visit a route children
+                    3. CanDeactivate - Checks to see if a user can exit a route
+                         {
+                            path: ':id',
+                            component: PersonEditComponent,
+                            canDeactivate: [CanDeactivateGuard]
+                        }
+                    4. Resolve - performs route data retrieval before route activation
+                        command - ng g resolver resolver-name
+                    5. CanLoad -  check to see if a user can route to a module that lazy load
+                    guard command - ng g guard <guard-name>
+

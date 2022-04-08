@@ -8,6 +8,7 @@ Exercising angular from basics
             - service <service name>
             - module <module name>
             - pipe <name>
+            - directive <name>
     1.4 - ng serve - used for transpiling and compiling the application. ng serve --port 4300 - this will open the appln in 4300 port
     1.5 - ng test - will run all the test cases using karma runner. Unit test cases are written using jasmine runner.
     1.6 - ng update - will update the dependencies based on package.json build and generate the output of appln. compile source code to javascript code.used to create dist folder to move it to higher environment.
@@ -101,15 +102,17 @@ Exercising angular from basics
                 Syntax for defining two way data binding - [(ngModel)] = "data"
                 <input type="text" [(ngModel)] = "oneName"/>
 7.  Pipes - 
-        Pipes are used to transform the data. pipes wil take input and convert/transform into desired format.
+        Pipes are used to transform the data to desired output. pipes wil take input and convert/transform into desired format.
         Operator used - | .
         7.1 Built in pipes  
             lowercase
             uppercase
             currency
             date
+            slice - can be slice a string or array element
             example - 
                     <td>{{user.userId | uppercase}}</td>
+                    <td>{{user.userId | slice:0:2}}</td>
                     <td>{{user.firstName | lowercase}}</td>
                     <td>{{user.dob | date: 'MMMM dd'}}</td>
                     <td>{{user.salary | currency: 'INR'}}</td>
@@ -122,7 +125,7 @@ Exercising angular from basics
         7.2 Parameterised pipes - we can pass one or more parameter to pipes
             Currency - 
                 code - <td>{{user.salary | currency: 'INR' : 'code'}}</td> - INR120,000.00
-                digit variation - {{user.salary | currency: 'INR' : '4.0-1'}}</td> - here 4 is the digit before precision. 0-1 after preision
+                digit variation - {{user.salary | currency: 'INR': 'symbol' : '4.0-1'}}</td> - here 4 is the digit before precision. 0-1 after preision
                 symbol - <td>{{user.salary | currency: 'INR'}}</td> - ₹120,000.00	
             Date - 
                 short
@@ -193,6 +196,249 @@ Exercising angular from basics
                         }
                     4. Resolve - performs route data retrieval before route activation
                         command - ng g resolver resolver-name
+                        {
+                            path:'detail/:country-id',
+                            component: CountryDetailComponent,
+                            resolve: {
+                            countryDetail: CountryDetailResolver
+                            }
+                        }
                     5. CanLoad -  check to see if a user can route to a module that lazy load
+                        
                     guard command - ng g guard <guard-name>
+9. Nullish Coalescing Operator - 
+        The nullish coalescing operator (??) is a logical operator that has following syntax.
+            leftExpr ?? rightExpr 
+            {{ userName ?? getUserName() }} 
+            this is equivalent to {{ userName !== null && userName !== undefined ? userName : getUserName() }} 
+10. ng-template -
+    It is used for rendering html elements but not directly displayed. this can be displayed through structural directive like
+    if, for and switch.
+    10.1 ngFor -
+        allUser = [{userId:101,name:'Mahesh'},{userId:102,name:'kumar'},{userId:103,name:'Ashok'}];
+        <ng-template ngFor let-user [ngForOf]="allUser" let-i="index">
+          <p>{{i}}. {{user.userId}} : {{user.name}}</p>
+        </ng-template>
+    10.2 <ng-template ngFor let-item [ngForOf]="items" let-i="index" let-o="odd" let-e="even" let-f="first" let-l="last" [ngForTrackBy]="trackByFn" >
+            ---
+        </ng-template> 
+    10.3 ngForTrackBy - with the help of trackBy, it will not create a new DOM, as we can see in the below image.
+         Only the new data in the DOM will be added, which will increase the application performance.
+        reference - https://dzone.com/articles/how-to-use-trackby-with-ngfor-in-angular-8
+    10.4 <ng-template ngFor let-user [ngForOf]="allUser" let-i="index" [ngForTrackBy]="trackByFn" let-o="odd" let-e="even" let-f="first" let-l="last">
+    10.2 ng-if  
+        <button type="button" (click)="onToggle1()">Toggle</button>
+        <ng-template [ngIf]="toggleFlag1">
+            <p>Hello World!</p>
+        </ng-template>
+    10.3 ng-if-else
+        <h3> Ng-Template using ng-if-else</h3>
+        <button type="button" (click)="onToggle2()">Toggle2</button>
+            <div *ngIf="toggleFlag2; else msgElseBlock">
+                <p>Hello world!</p>
+            </div>
+        <ng-template #msgElseBlock>
+            <p>Else block:Hello world!</p>
+        </ng-template>
+    10.4 ng- if - else then
+        
+        <h3> NG-template using ng-if-else-then</h3>
+        <button type="button" (click)="onToggle3()">Toggle3</button>
+        <div *ngIf="toggleFlag3 then msgThenBlock else msgElseBlock">
+
+        </div>
+        <ng-template #msgThenBlock>
+            <p>Then block:Hello world!</p>
+        </ng-template>  
+    10.5 ng-switch-cases
+        <h3>ng-template using ng-switch-case</h3>
+        <input type="radio" name="direction" (click)="myDir='east'"> East
+        <input type="radio" name="direction" (click)="myDir='west'"> West
+        <input type="radio" name="direction" (click)="myDir='north'"> North
+        <input type="radio" name="direction" (click)="myDir='south'"> South
+        <div [ngSwitch]="myDir">
+        <ng-template [ngSwitchCase]="'east'">Go to <b>East</b> direction</ng-template>
+        <ng-template [ngSwitchCase]="'west'">Go to <b>West</b> direction</ng-template>
+        <ng-template [ngSwitchCase]="'south'">Go to <b>South</b> direction</ng-template>
+        <ng-template [ngSwitchCase]="'north'">Go to <b>North</b> direction</ng-template>
+        <ng-template ngSwitchDefault><b>No</b> direction</ng-template>
+        </div>         
+11. ng-container
+    To run structural directive, we need a root element and for that we can use <ng-container> which is not added to DOM at runtime.
+    11.1 ng-If
+            <h3>Ng-container with ng-if</h3>
+            <p>
+                HI! this is ng-container. ..
+                <ng-container *ngIf="isMsgShow">
+                    {{msg}}
+                </ng-container>
+            </p> 
+    11.2 ng-for 
+                  users = [{userId:'101',name:'ashok',isActive:true},
+                {userId:102,name:'kumar',isActive:true},{userId:103,name:'jaya',isActive:true}];        
+                <ul>
+                    <ng-container *ngFor="let user of users">
+                        <li *ngIf="user.isActive">
+                            {{user.name}}
+                        </li>
+                    </ng-container>
+                </ul>  
+    11.3 ng-switch
+                userId=101;
+                <h3>Ng-container with ng-switch</h3>
+                <div [ngSwitch]="userId">
+                    <ng-container *ngSwitchCase="101">Ashok</ng-container>
+                    <ng-container *ngSwitchCase="102">Kumar</ng-container>
+                </div>
+    11.4 ng-container using ng-template
+                <h3>Ng-Container with ng-template</h3>
+                <ng-template #helloTemplate>
+                    <p>Hello Template</p>
+                </ng-template>
+                <ng-container *ngTemplateOutlet="helloTemplate">
+                    
+                </ng-container>
+    11.5 ng container using ng template and template - object reference
+    The NgTemplateOutlet can attach a context object to EmbeddedViewRef
+         bookContext = {bookName: 'life',writer: 'Ashok', $implicit:'Chennai'};
+         <ng-container *ngTemplateOutlet="book; context: bookContext"></ng-container>
+
+            <ng-template #book let-name="bookName" let-writer="writer">
+                <span>
+                    This book {{name}} was written by {{writer}}
+                </span>
+            </ng-template>
+12. dynamic component loading
+    Component can be loaded dynamically at runtime. Generally a component is loaded using component selector in component template that is identified at Angular compile time. 
+    Component can also be loaded dynamically at runtime using ComponentFactory, ComponentFactoryResolver and ViewContainerRef.
+    loadComponent(viewContainerRef: ViewContainerRef, postItem: PostItem) {
+	let componentFactory = this.componentFactoryResolver
+                      .resolveComponentFactory(postItem.component);
+	viewContainerRef.clear();
+	let componentRef = viewContainerRef.createComponent(componentFactory);
+	let myPost: MyPost = <MyPost>componentRef.instance;
+	myPost.post = postItem.data;
+    }   
+    Reference- https://www.concretepage.com/angular-2/angular-2-4-dynamic-component-loader-example
+13. Decorators
+    13.1 - @ViewChild - provides the instance of another component to a parent component or directive
+           it can be also be used for template reference variable with ElementRef or TemplateRef.
+           13.1.1 - @ViewChild using component
+                    @ViewChild(NumberComponent)
+                    private numberComponent = {} as NumberComponent;
+                     increase() {
+                            this.numberComponent.increaseByOne();
+                        }
+                        decrease() {
+                            this.numberComponent.decreaseByOne();
+                        } 
+            13.1.2 - @ViewChild using directive
+                     @ViewChild(CpColorDirective)
+                    cpColorDirective ={} as CpColorDirective;
+                    changeColor(color:string) {
+                        this.cpColorDirective.changeColor(color);
+                    }
+            13.1.3 - @ViewChild with TemplateRef using ElementRef
+                    <div>
+                    Name: <input type="text" #name> <br/>
+                    City: <input type="text" #city>  
+                    </div> 
+                    @ViewChild('name')
+                    private elName = {} as ElementRef;
+                    @ViewChild('city')
+                    private elCity = {} as ElementRef;
+
+                    ngAfterViewInit() {
+                        this.elName.nativeElement.style.backgroundColor = 'cyan';
+                        this.elName.nativeElement.style.color = 'red';
+                        this.elCity.nativeElement.style.backgroundColor = 'cyan';
+                        this.elCity.nativeElement.style.color = 'red';
+                    }
+    13.2 - @ViewChildren decorator is used to get the query list of a element or directive from the view dom.
+            When a new child element is added or removed, the QueryList will be updated and its changes function will emit new value
+            13.2.1 @viewchildren using component
+                   @ViewChildren(WriterComponent)
+                writer = {} as QueryList<WriterComponent>; 
+
+14. Angular life Cycle 
+    Components and directives has a life cycle managed by angular
+        Oninit & ondestroy interface have method ngOnInit & ngOnDestroy.if not followed then memory leaks are possible.
+        14.1 ngOnInit is called only one time after the component/directive is constructed 
+            1. perform complex initialization in ngOninit()
+            2. if we need to fetch data then it should be done in ngOninit. A constructor can be done local variable declaration.
+        14.2  ngOnDestroy is called just before component/directive is destroyed.
+                1. Stop interval timers.
+                2. Unsubscribe Observables.
+                3. Detach event handlers.
+        14.3 Angular ngAfterViewInit() is the method of AfterViewInit interface.
+             ngAfterViewInit() is a lifecycle hook that is called after Angular has fully initialized a component's views
+        14.4 Angular ngDoCheck is the method of doCheck interface
+             doCheck is a life cycle hook that invokes custom change-detection for a directive / component,
+             To perform change-detection with ngDoCheck(), we need to use KeyValueDiffers and IterableDiffers for implementing custom change checking for collections.
+             The KeyValueDiffers can detect the changes in Array as well as changes in properties of objects whereas IterableDiffers can only detect changes in iterable objects such as Array.
+             constructor(private kvDiffers: KeyValueDiffers) { }
+              ngOnInit(): void {
+                this.arrayDiffer = this.kvDiffers.find([]).create();
+                this.empArray.forEach(emp=>{
+                this.empDifferMap.set(emp.id,this.kvDiffers.find(emp).create());
+                this.empMap.set(emp.id, emp);
+                })
+            }
+            ngDoCheck() {
+                const empArrChanges = this.arrayDiffer.diff(this.empArray);
+                if(empArrChanges) {
+                empArrChanges.forEachAddedItem((record:any) => {
+                    let emp = record.currentValue;
+                    this.empDifferMap.set(emp.id,this.kvDiffers.find(emp).create());
+                    this.empMap.set(emp.id, emp);
+                    this.kvChangeLogs.push('Added '+emp.name);
+                })
+             }
+        14.5 Angular provides lfe cycle hooks for change detection.ngOnChanges is the method and onChanges is the interface.
+            The method ngOnCHanges uses SimpleCHangesas an arguments to give new and previous value of input after change
+                <app-worker [worker]="work" [message]="msg"></app-worker>
+                            ngOnChanges(changes: SimpleChanges) {
+                for(let propName in changes){
+                let change = changes[propName];
+                let curVal = JSON.stringify(change.currentValue);
+                let preVal = JSON.stringify(change.previousValue);
+                let changeLog = `${propName}: currentValue = ${curVal}, previousValue = ${preVal}`;
+                if(propName === 'message'){
+                    this.allMsgChangeLog.push(changeLog);
+                } else if(propName === 'worker') {
+                    this.allWorkerChangeLog.push(changeLog);
+                }
+
+                console.log('curVal: '+curVal);
+                console.log('preVal: '+preVal);
+                }
+            }    
+15. Injector:- It injects a object provided by providers into component or service. Those classes which are configured by
+                providers and decorated by @Injectable are available for dependency injection DI 
+                Angular providers provides different types of providers such as class providers,alias provider, useFactory,useValue
+                The injector annotation creates a singleton object of a class configured by providers.
+                providedIn: 'root' will be available for dependency injection for all components and services in the application.
+                15.1 Class Provider: UseClass - it creates and returns new instance of specified class.
+                    providers: [ 
+                        { provide: AnimalService, useClass: LionService }
+                    ] 
+                15.2 Alias Provider: useExisting -  maps one token to another. Used in the case when we have injected a service in component or
+                     in any other service and it has become old and now we want to use new service without changing the code
+                    providers: [ 
+                        LaptopService,
+                        { provide: DesktopService, useExisting: LaptopService }
+                    ] 
+                15.3 The useValue is value provider that returns a fixed value for dependency injection.
+                      providers: [ 
+                        { provide: Book, useValue: JAVA_BOOK },
+                        { provide: HELLO_MESSAGE, useValue: 'Hello World!' }
+                    ],  
+                15.4 The useFactory configures a factory provider that returns object for dependency injection 
+                    providers: [ 
+                        BookService,
+                        { provide: Book, useValue: JAVA_BOOK },
+                        { provide: PREFERRED_BOOKS, useFactory: preferredBooksFactory(3), deps: [Book, BookService] }
+                    ]  
+                    Reference - https://www.concretepage.com/angular-2/angular-2-4-providers-example
+                    
 

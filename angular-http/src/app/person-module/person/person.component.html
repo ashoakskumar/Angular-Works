@@ -1,0 +1,83 @@
+<div class="container mt-5">
+    <form [formGroup]="formGrp" (ngSubmit)="save()">
+<div class="mb-3">
+    <label for="nameInput" class="form-lable">Name: </label>
+    <input type="text" id="nameInput" formControlName="name" class="form-control" placeholder="Enter Name">
+    <div class="text-danger" *ngIf="formGrp.get('name')?.hasError('required') && formGrp.get('name')?.touched">
+        Please select a valid state.
+      </div>
+      <div class="text-danger" *ngIf="formGrp.get('name')?.dirty && formGrp.get('name')?.hasError('prefix')">
+        Name should start with prefix Mr.
+      </div>
+      {{formGrp.get('name')?.pristine}}
+</div>
+<div class="mb-3">
+    <label for="ageInput" class="form-lable">Age: </label>
+    <input type="text" id="ageInput" class="form-control" formControlName="age" placeholder="Enter Age">
+    <div class="text-danger" *ngIf="formGrp.get('age')?.touched && (formGrp.get('age')?.hasError('min') || formGrp.get('age')?.hasError('max'))">
+        Value should not be greater than 18 and lesser than 50
+    </div>
+    <div class="text-danger" *ngIf="formGrp.get('age')?.touched && (formGrp.get('age')?.hasError('required'))">
+        Value is required
+    </div>
+    <div class="text-danger" *ngIf="formGrp.get('age')?.touched && formGrp.get('age')?.hasError('compliant')">
+        Value shoyld not be lesser that 18
+    </div>
+</div>
+<div class="mb-3">
+    <label for="genderInput">Gender: </label>
+    <div class="form-check">
+        <input type="radio" id="maleInput" class="form-check-input" value="male" formControlName="gender" checked="checked">
+        <label for="maleInput" class="form-check-lable">Male: </label>
+     </div>
+    <div class="form-check">    
+        <input type="radio" id="femaleInput" class="form-check-input" value="female" formControlName="gender">
+        <label for="femaleInput" class="form-check-lable">Female: </label>  
+    </div>
+</div>
+<div class="mb-3">
+    <label for="genderInput">Location: </label>
+    <select name="location" id="location" class="form-select" formControlName="location">
+        <option value="0" [selected]="'0'">Open this select menu</option>
+        <option *ngFor="let val of locVal" [ngValue]="val">{{val}}</option>
+    </select>
+</div>
+<div formArrayName="address">
+<div class="bd-example mb-3" *ngFor="let addr of address.controls;let idx = index" [formGroupName]="idx">
+    <div class="row g-3">
+        <div class="col">
+            <label for="streetInput">Door Number</label>
+            <input type="text" id="streetInput" class="form-control" formControlName="doorNo" placeholder="Enter Door Number">
+        </div>
+        <div class="col">
+            <label for="streetInput">Street</label>
+            <input type="text" id="streetInput" class="form-control" formControlName="streetName" placeholder="Enter street name">
+        </div>
+        <div class="col">
+            <label for="areaInput">Area</label>
+            <input type="text" id="areaInput" class="form-control" formControlName="areaName" placeholder="Enter area name">
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col">
+            <label for="streetInput">City</label>
+            <input type="text" id="stateInput" class="form-control" formControlName="city" placeholder="Enter State">
+        </div>
+        <div class="col">
+            <label for="streetInput">State</label>
+            <input type="text" id="stateInput" class="form-control" formControlName="state" placeholder="Enter State">
+        </div>
+        <div class="col">
+            <label for="streetInput">Country</label>
+            <input type="text" id="countryInput" class="form-control" formControlName="country" placeholder="Enter Country">
+        </div>
+    </div>
+</div></div>
+<div class="mb-3">
+    <span class="me-3"><button type="button" (click)="addAddress()" class="btn btn-primary">Add Address</button></span> 
+   <span class="me-3"><button type="submit" class="btn btn-primary">Save</button></span> 
+<span>
+    <button type="button" class="btn btn-primary">Reset</button>
+</span>
+</div></form>
+</div>

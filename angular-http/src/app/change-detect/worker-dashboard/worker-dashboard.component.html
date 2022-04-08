@@ -1,0 +1,12 @@
+<div class="employee">
+    <form [formGroup]="group" (ngSubmit)="onFormSubmit()">
+        <p>Name: <input type="text" formControlName="name"></p>
+        <p>Age: <input type="text" formControlName="age"></p>
+        <button type="submit">Submit</button>
+    </form>
+
+</div>
+<div class="message">
+    <p>Message: {{msg}}</p>
+</div>
+<app-worker [worker]="work" [message]="msg"></app-worker>

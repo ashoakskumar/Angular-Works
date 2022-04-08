@@ -1,0 +1,36 @@
+<h3>Create New Team
+    <button type="button" (click)="loadTeam('Java Team')">Load Default Team</button>
+    <button type="button" (click)="resetTeamForm()"> Reset </button>
+</h3>
+<div *ngIf="formSubmitted && teamForm.pristine" class="submitted"> Form Submitted Successfully.</div>
+<div class="team">
+    <form [formGroup]="teamForm" (ngSubmit)="onFormSubmit()">
+        <p>Team Name : <input type="text" formControlName="teamName">
+            <br><label for="name" *ngIf="teamForm.get('teamName')?.invalid && teamForm.get('teamName')?.dirty">Team name is required</label>
+        </p>
+        <p>Team Manager Name : <input type="text" formControlName="teamManager"></p>
+        <b>Department : </b><br>
+        <div formGroupName="teamDept" class="department">
+            <p>Department Head: <input type="text" formControlName="deptHead"></p>
+            <p>Department Name: <input type="text" formControlName="deptName"></p>
+        </div>
+        <div class="all-emp">
+            <b> Employees in team</b><br><br>
+            <div formArrayName="employees">
+                <div *ngFor="let emp of employeeFormArray.controls; let idx=index" [formGroupName]="idx" class="employee">
+                    <p> <b> Employee {{idx+1}}</b></p>
+                    <p>Employee Id: <input type="text" formControlName="empId"></p>
+                    <p>Employee Name <input type="text" formControlName="empName"></p>
+                    <p>Skill: 
+                        <select formControlName="empSkill">
+                            <option *ngFor="let skill of allSkills | async" [ngValue]="skill.name">{{ skill.displayName}}</option>
+                        </select>
+                    </p>
+                    <p><button type="button" (click)="deleteEmployee(idx)">Delete</button></p>
+                </div>
+            </div>
+            <button type="button" (click)="addEmployee()">Add More Employee</button>
+        </div><br />
+        <button [disabled]="teamForm.invalid">Submit</button>
+    </form>
+</div>

@@ -1,0 +1,13 @@
+<h3>View Children + demo component</h3>
+<div>
+    <app-writer name="ashok" book="java"></app-writer><br>
+    <app-writer name="kumar" book="angular"></app-writer><br>
+    <app-writer name="jp" book="boot"></app-writer><br>
+    <app-writer name="john" book="spring" *ngIf="allWritersVisible"></app-writer><br>
+    <app-writer name="peter" book="jquery" *ngIf="allWritersVisible"></app-writer>
+
+</div>
+<button (click)="onShowAllWriters()">
+    <label *ngIf="!allWritersVisible">Show More</label>
+    <label *ngIf="allWritersVisible">Show less</label>
+</button>

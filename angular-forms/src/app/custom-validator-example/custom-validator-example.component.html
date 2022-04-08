@@ -1,0 +1,34 @@
+<h3>Team Reactive Forms</h3>
+<form [formGroup]="teamForm" (ngSubmit)="onFormSubmit()">
+    <table>
+        <tr>
+            <td>
+                Team Name:
+            </td>
+            <td>
+                <input type="text" formControlName="teamName">
+                <div *ngIf="teamForm?.get('teamName')?.hasError('required')" ngClass="error">
+                    Enter Team Name
+                </div>
+                <div *ngIf="teamForm?.get('teamName')?.hasError('teamNamePrefix')" ngClass="error">Start Team Name Starts with {{teamNamePrefix}}</div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Number of Persons:   
+            </td>
+            <td>
+                <input type="text" formControlName="numOfPerson">
+                <div *ngIf="teamForm?.get('numOfPerson')?.hasError('required')" ngClass="error">
+                    Enter Number of Person
+                </div>
+                <div *ngIf="teamForm?.get('numOfPerson')?.hasError('oddNum')" ngClass="error">
+                    Odd Number not allowed
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><button>Submit</button></td>
+        </tr>
+    </table>
+</form>

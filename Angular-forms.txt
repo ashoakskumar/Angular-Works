@@ -1,0 +1,455 @@
+Angular has two approach to create forms - template driven & reactive form
+1. Template Driven Forms-
+    1.1 Here the logic for creating forms and validation are handled in html template. Validation is handled thru directives.
+    1.2 Angular provides NgForm and NgModel directive to create template-driven form.
+    1.3 NgForm creates the top level form-group instances and binds it to a form to track aggregate form value and validity status of the form
+    1.4 ngform is exported in local template as #userForm = "ngForm".
+    1.5 Using local variable template ngform , we can access form in our html template in the following ways
+        userForm.value - it returns form fields value
+        userForm.valid - returns boolean value if it validation compliance
+        userForm.touched - returns boolean if the user has entered value for atlease one value
+        userForm.submitted - returns boolean value once form is submittted
+    1.6 ngModel - this model creates a fromcontrol instance from a domain model created in a class and binds it into a formcontrol element.
+        form control keeps the track of user interaction and validation status of the form control.
+        ngmodel can be user standalone as well as with parent forms.
+        <input [(ngModel)]="userName" required #uname="ngModel">
+        <p>Name value: {{ userName }} </p>
+        <p>Name value: {{ uname.value }} </p>
+        <p>Name valid: {{ uname.valid }} </p> 
+    1.7 On submit 
+        <form #userForm="ngForm" (ngSubmit)="onFormSubmit(userForm)"> On form submit, the form values can be accessed in class as given below.
+        onFormSubmit(userForm: NgForm) {
+            console.log(userForm.value);
+            console.log('Name:' + userForm.controls['name'].value);
+        } 
+    1.8 validation -
+    Form controls validators contains set of built-in fn such as min,max,required,email,minLength, maxLength, & pattern.
+    And it has check validation status such as status,valid,invalid,disabled,pristine,dirty, touched and untouched.
+    Pattern Example :
+        emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
+        secondaryEmail = new FormControl('', [Validators.pattern(this.emailPattern)]); 
+    CHeck Validation status:
+        $untouched The field has not been touched yet
+        $touched The field has been touched
+        $pristine The field has not been modified yet
+        $dirty The field has been modified
+        $invalid The field content is not valid
+        $valid The field content is valid
+    In-built:
+        age: ['',[Validators.max(50),Validators.required],[ageValidator(this.service)]],
+    Custom:
+        Synchronous:
+            name : ['', [Validators.required,nameValidator(this.namePrefix)]],
+        asynchronous:
+            age: ['',[Validators.max(50),Validators.required],[ageValidator(this.service)]],
+    Add or remove:
+         this.name.setValidators([Validators.required,nameValidator(this.namePrefix)]);
+        this.name.updateValueAndValidity();
+    
+        <form #userForm="ngForm" (ngSubmit)="onFormSubmit(userForm)" novalidate>
+            <input name="userName" required minlength="5" ngModel #userName="ngModel">
+            <div *ngIf="userName.errors" class="error">
+                <div *ngIf="userName.errors.required">
+                    Username required.
+                </div>
+                <div *ngIf="userName.errors.minlength">
+                    Minimum length 5 characters.
+                </div>
+            </div>
+        ------
+        </form>
+    1.9 Multiple Select Option
+        <select multiple name="selectedTechs" ngModel>
+            <option *ngFor="let tech of allTechnologies" [ngValue]="tech">
+                {{ tech.techName }}
+            </option>
+        </select>
+        allTechnologies = [
+            new Technology(100, 'Java'),
+            new Technology(101, 'Angular'),
+            new Technology(102, 'Hibernate'),
+            new Technology(103, 'Spring')		 
+        ] 
+    1.10
+2. Reactive Forms-
+    2.1 - These are the model driven forms where we design the structure of the form in the component class.
+          We create the form models with form groups, controls, builder & arrays and bind it to HTML Template through directives.
+          It handles the forms whose values changes over time and change of the form state returns the new state that maintains the integrity
+          of model between changes.
+    2.2 - ReactiveFormsModule - provides the dependency class and directives to create reactive forms.
+    2.3 - Form Control - It is used to track value and validation of a form control. It can be used stand alone as well as with parent
+            form. FromControlName and formcontrol directive are used to bind component level form control variable to html template.
+            Example - 
+            name = new FormControl('', [Validators.required, Validators.maxLength(15)]);
+            age = new FormControl(20, Validators.required);
+
+            <div>
+                Name: <input type="text" [formControl]="name">
+                <label for="name" [ngClass]="'error'" *ngIf="name.invalid"> Name requrired with max 15 character </label>
+            </div>
+            <div>
+                <button (click)="setNameValue()"> Set Value </button>
+                <button (click)="setNameValue()"> Reset </button>
+            </div>
+            <div>
+                Age: <input type="text" [formControl]="age">
+            </div>
+    2.4 - form Group - It is used to track the value and validation state of a group of formcontrol
+          FormGroupName: It is a directive that syncs a nested FormGroup to a DOM element.
+          FormArrayName: It is a directive that syncs a nested FormArray to a DOM element.
+    2.5 - Form builder is used to create a big reactive forms within minimum code. Form builder methods are group, control, arrays
+        that returns formgroup, formcontrols and form array.Using form builder we can diractly pass an object or array to create a forms
+    2.6 - Custom Validator - ValidatorFn is used to create sync validator function, 
+            export function oddNumValidator(): ValidatorFn {
+                return (control: AbstractControl): ValidationErrors | null => {
+                    const v = control.value;
+                    return (v % 2 === 1) ? { "oddNum": true } : null;    
+                };
+                }  
+    2.7 - Decorators - 
+            @ViewChild - It provides the instance of another component or directive in a parent component.THen the parent component
+            can access the methods and properties of that component.
+            In a parent component we can use @ViewChild() for components, directives and template reference variable with ElementRef or TemplateRef
+            2.7.1 at component level Example
+                 @ViewChild(StopWatchComponent)
+                private stopWatch: StopWatchComponent;
+
+                startWatch() {
+                    this.stopWatch.starts();
+                }
+                stop() {
+                    this.stopWatch.stopWatch();
+                }
+            2.7.2 @ViewChild() using Directive
+                <p cpColor> Change my color</p>
+            2.7.3 @ViewChild() with Template Variable using ElementRef to access Native Element
+                 @ViewChild('name')
+                    private elName: ElementRef;
+                    @ViewChild('city')
+                    private elCity: ElementRef;
+            @Input - @Input is used to define an input property to achieve component property binding. 
+            @Output - is used to define output property to achieve custom event binding. 
+            @Input and @Output - can define alias for property names as @Input(alias) and @Output(alias)
+            Output will be used with the instance of EventEmitter
+            2.7.4 @Input decorator binds a property within one component (child component) to receive a value from another component (parent component). This is one way communication from parent to child
+                 <child-one [ctMsg] = "cityMsg" [ctArray]="cityArray" [studentAddMsg]="stdAddMsg" (addStudentEvent)="saveData($event)"
+                (sendMsgEvent)="printMsg($event)"></child-one>
+            2.7.5 @Output decorator binds a property of a component to send data from one component (child component) to calling component (parent component).    
+                 @Input() 
+                    ctMsg: string;
+                    @Input('ctArray')
+                    myctArray:Array<string>
+                    @Input('studentAddMsg')
+                    addMsg:string;
+                    @Output('addStudentEvent')
+                    addStdEvent = new EventEmitter<Student>();
+                    @Output()
+                    sendMsgEvent = new EventEmitter<string>();   
+    2.8 RXJS - RxJS is a library for composing asynchronous and event-based programs by using observable sequences. 
+    It provides one core type, the Observable, satellite types (Observer, Schedulers, Subjects) and operators inspired by Array#extras (map, filter, reduce, every, etc) to allow handling asynchronous events as collections.
+    2.8.1 Observable - things you wish to observe and take action on.  Observable objects are registered, and other objects observe (in Angular using the subscribe method) them and take action when the observable object is acted on in some way.
+                      As a publisher, you create an Observable instance that defines a subscriber function. This is the function that is executed when a consumer calls the subscribe() method. The subscriber function defines how to obtain or generate values or messages to be published.
+                     Observable: represents the idea of an invokable collection of future values or events.
+                     Observer: is a collection of callbacks that knows how to listen to values delivered by the Observable.
+                     Subscription: represents the execution of an Observable, is primarily useful for cancelling the execution.
+                      Example - 
+                        const myObservable = Observable.of(1, 2, 3);
+     
+                        // Create observer object
+                        const myObserver = {
+                        next: x => console.log('Observer got a next value: ' + x),
+                        error: err => console.error('Observer got an error: ' + err),
+                        complete: () => console.log('Observer got a complete notification'),
+                        };
+                        
+                        // Execute with the observer object
+                        myObservable.subscribe(myObserver);  
+    2.8.2 - Operators are the essential pieces that allow complex asynchronous code to be easily composed in a declarative manner.
+            Two kind of operators
+                1. Pipeable operators - A Pipeable Operator is a function that takes an Observable as its input and returns another Observable
+                obs.pipe(op1(), op2(), op3(), op4());
+                2. Creation Operators are the other kind of operator, which can be called as standalone functions to create a new Observable. 
+                For example: of(1, 2, 3) creates an observable that will emit 1, 2, and 3, one right after another.
+                3. map - it passes each source value through a transformation function to get corresponding output values.
+                this operator applies a projection to each value and emits that projection in the output Observable.
+                let mapObs = of(1,2,3).pipe(map((x) => x*x));
+                mapObs.subscribe(value => console.log(`value: ${value}`));
+                4. first() - this operator applies a projection to first element and emits that projection in the output Observable.
+                of(1,2,3).pipe(first()).subscribe(value=> console.log(`value: ${value}`));
+                5. concat - The concat operator creates an output Observable which sequentially emits all values from given Observable and then moves on to the next.
+                let concatObs = of(1,2,3,4);
+                let concatObs2 = interval(1000).pipe(take(4));
+                const result = concat(concatObs, concatObs2);
+                result.subscribe(value=>console.log(`result: ${value}`));
+                5. defer - allows you to create an Observable only when the Observer subscribes. 
+                    const clickOrInterval = defer(function () {
+                    return Math.random() > 0.5 
+                    ? fromEvent(document,'click') 
+                    : interval(1000);
+                    });
+                    clickOrInterval.subscribe(x=>console.log(x))
+                6. From - from converts various other objects and data types into Observables
+                    // const array = [10,20,30];
+                    // const result = from(array);
+                    // result.subscribe(x=>console.log(x));
+                7. FromEvent - Creates an Observable from DOM events
+                    const clicks = fromEvent(document, 'click');
+                    clicks.subscribe(x => console.log(x));
+                8. generator - Generates an Observable by running a state-driven loop that emits an element on each iteration.
+                    const result = generate(0,x=>x<3,x=>x+1,x=>x);
+                    result.subscribe(console.log);
+                    const result1 = generate(0, x => x < 3, x => x + 1, x => x * 1000);
+                    result1.subscribe({
+                    next: value => console.log(value),
+                    complete: () => console.log('Complete !!')
+                    })
+                9. Interval returns an Observable that emits an infinite sequence of ascending integers, with a constant interval of time of your choosing between those emissions.
+                  const intervalN = interval(1000);
+                    const takeFive = intervalN.pipe(take(5));
+                    takeFive.subscribe({
+                    next: value => console.log(value),
+                    complete: () => console.log('complete')
+                    })
+                } 
+                10. Of - Each argument becomes a next notification.
+                     const valuesArr = of([1,2,3]);
+                        valuesArr.subscribe({
+                        next: val => {console.log(val)},
+                        complete: () => console.log('end'),
+                        error: err => {console.log(err)}
+                        })
+                11. Range - Emits a sequence of numbers in a range.
+                const numbers = range(1, 3);
+ 
+                numbers.subscribe({
+                next: value => { console.log(value) },
+                complete: () => { console.log('Complete!') }
+                });
+                12. throw Error - Just errors and does nothing else
+                const errorWithTimestamp$ = throwError(() => {
+                    const error: any = new Error(`This is error number ${++errorCount}`);
+                    error.timestamp = Date.now();
+                    return error;
+                });
+                
+                errorWithTimestamp$.subscribe({
+                    error: err => console.log(err,err.timestamp, err.message)
+                });
+                
+                errorWithTimestamp$.subscribe({
+                    error: err => console.log(err.timestamp, err.message)
+                });
+                13. TImer - Used to emit a notification after a delay.
+                     const source = of(1, 2, 3);
+
+                    const result = timer(3000).pipe(
+                    concatMapTo(source)
+                    )
+                    .subscribe(console.log);
+                14. iif - Checks a boolean at subscription time, and chooses between one of two observable sources
+                    let subscribeToFirst:boolean;
+                    const firstOrSecond = iif(
+                    () => subscribeToFirst,
+                    of('First'),
+                    of('Second')
+                    );
+                    subscribeToFirst = true;
+                    firstOrSecond.subscribe(console.log);
+                    subscribeToFirst = false;
+                    firstOrSecond.subscribe(console.log);
+        Join Creation operator - 
+        These are Observable creation operators that also have join functionality -- emitting values of multiple source Observables
+        1. combineLatest - Combines multiple Observables to create an Observable whose values are calculated from the latest values of each of its input Observables.
+            const firstTimer =  timer(0,1000);
+        // const secondTimer = timer(500,1000);
+        // const combinedTimer = combineLatest([firstTimer,secondTimer]);
+        // combinedTimer.subscribe(console.log);
+        2. ForkJoin - Wait for Observables to complete and then combine last values they emitted
+                const observable = forkJoin({
+            foo: of(1,2,3,4),
+            bar: Promise.resolve(8),
+            baz:timer(4000)
+            });
+            observable.subscribe({
+            next: (val) => console.log(val),
+            complete: ()=> console.log('This is how it ends')
+            })
+          }
+        3. Merge - Flattens multiple Observables together by blending their values into one Observable.
+            const clicks = fromEvent(document, 'click');
+            const timer = interval(1000);
+            const clicksOrTimer = merge(clicks, timer);
+            clicksOrTimer.subscribe(x => console.log(x));
+    Transformation operator -
+        1. buffer -  Collects values from the past as an array, and emits that array only when another Observable emits.
+             const clicks = fromEvent(document, 'click');
+            const intervalEvents= interval(1000);
+            const buffered = intervalEvents.pipe(buffer(clicks));
+            buffered.subscribe(console.log);
+        2. concatMap - Maps each value to an Observable, then flattens all of these inner Observables using concatAll.
+            const click = fromEvent(document,'click');
+            const result = click.pipe(concatMap(cm => interval(1000).pipe(take(4))));
+            result.subscribe(console.log)
+        3. expand - It's similar to mergeMap, but applies the projection function to every source value as well as every output value. It's recursive.
+             const clicks = fromEvent(document,'click');
+                const powerOfTwo = clicks.pipe(
+                    mapTo(1),
+                    expand(x => of(2 * x).pipe(delay(1000))),
+                    take(10)
+                );
+                powerOfTwo.subscribe(x=>console.log(x));
+                }
+        4. Groups the items emitted by an Observable according to a specified criterion, and emits these grouped items as GroupedObservables, one GroupedObservable per group.
+            of(
+            {id: 1, name: 'JavaScript'},
+            {id: 2, name: 'Parcel'},
+            {id: 2, name: 'webpack'},
+            {id: 1, name: 'TypeScript'},
+            {id: 3, name: 'TSLint'}
+            ).pipe(
+            groupBy(p => p.id),
+            mergeMap((group$) => group$.pipe(reduce((acc, cur) => [...acc, cur], [])))
+            )
+            .subscribe(p => console.log(p));
+        5. Map -  it passes each source value through a transformation function to get corresponding output values.
+            const clickEvent = fromEvent(document,'click');
+            const position = clickEvent.pipe(map((pos:any) => pos.clientX));
+            position.subscribe(val=>console.log(val));
+        6. MapTo - it maps every source value to the same output value every time.
+            const clicks = fromEvent(document, 'click');
+            const greetings = clicks.pipe(mapTo('Hi'));
+            greetings.subscribe(x => console.log(x)); 
+        7. MergeMap - maps each value to an Observable, then flattens all of these inner Observables using mergeAll.     
+            const letter = of('A','B','C','D');
+            const merge = letter.pipe(mergeMap(x=>interval(1000).pipe(map(i=> x+i))))
+            merge.subscribe(result=>console.log(result));
+        8. SwitchMap - Maps each value to an Observable, then flattens all of these inner Observables.
+            const switched = of(1,2,3).pipe(switchMap((x:number) => of(x,x*3,x*5)));
+            switched.subscribe(console.log);
+        9. Scan - It's like reduce, but emits the current accumulation state after each update
+            const numbers$ = of(1, 2, 3,4,5);
+        
+            numbers$
+            .pipe(
+                // Get the sum of the numbers coming in.
+                scan((total, n) => total + n),
+                // Get the average by dividing the sum by the total number
+                // received so var (which is 1 more than the zero-based index).
+                //map((sum, index) => sum / (index + 1))
+            )
+            .subscribe(console.log);
+                }
+    Filtering Operators - 
+        1. debounceTime - It's like delay, but passes only the most recent notification from each burst of emissions.
+            const clicks = fromEvent(document, 'click');
+            const result = clicks.pipe(debounceTime(1000));
+            result.subscribe(x => console.log(x));
+        2. distincts - A function that returns an Observable that emits items from the source Observable with distinct values.
+            const distincts = of(1,2,3,4,5,3,2,1,3,2,4,5,5,6).pipe(distinct());
+              distincts.subscribe(console.log);
+        3. elementAt -  returns an Observable that emits the item at the specified index in the source Observable
+             from([1,2,3]).pipe(elementAt(2)).subscribe(console.log);
+        4. filter - it only emits a value from the source if it passes a criterion function.
+            from([{name:'ashok',location:'chennai'},{name:'kumar',location:'pondy'},{name:'dinesh',location:'trichy'},{name:'arul',location:'chennai'}])
+            .pipe(filter(x=>x.location === 'chennai')).subscribe(console.log);
+        5. Skip - Skip the values before the emission
+            from([{name:'ashok',location:'chennai'},{name:'kumar',location:'pondy'},{name:'dinesh',location:'trichy'},{name:'arul',location:'chennai'}])
+             .pipe(skip(1)).subscribe(console.log);
+        6. take - Takes the first count values from the source, then completes.
+            from([{name:'ashok',location:'chennai'},{name:'kumar',location:'pondy'},{name:'dinesh',location:'trichy'},{name:'arul',location:'chennai'}])
+            .pipe(take(1)).subscribe(console.log);
+        7. takeUntil - Lets values pass until a second Observable, notifier, emits a value. Then, it completes.
+            const source = interval(1000);
+                const clicks = fromEvent(document, 'click');
+                const result = source.pipe(takeUntil(clicks));
+                result.subscribe(console.log);     
+        8. throttle emits the source Observable values on the output Observable when its internal timer is disabled                   
+    Error Handling Operators
+        1. catchError - It only listens to the error channel and ignores notifications. Handles errors from the source observable, and maps them to a new observable.
+         The error may also be rethrown, or a new error can be thrown to emit an error from the result.
+         of(1,2,3,4,5,6).pipe(map(x=> {
+                if(x===4) {
+                throw 'four!';
+                } return x;
+            }'  `1
+            ),
+            catchError(err => of('I','II','III','IV'))
+            ).subscribe(console.log)
+        2. retryWhen - Retry an observable sequence on error based on custom criteria.
+            const source = interval(1000);
+            const example = source.pipe(
+            map(val => {
+                if (val > 5) {
+                // error will be picked up by retryWhen
+                throw val;
+                }
+                return val;
+            }),
+            retryWhen(errors =>
+                errors.pipe(
+                // log error message
+                tap(val => console.log(`Value ${val} was too high!`)),
+                // restart in 5 seconds
+                delayWhen(val => timer(val * 1000))
+                )
+            )
+            );
+            
+            const subscribe = example.subscribe(val => console.log(val));
+    Utility operator - 
+        1. tap - Used when you want to affect outside state with a notification without altering the notification
+            const intr = interval(1000);
+            const taps = of(Math.random()).pipe(
+                tap(console.log),
+                map((y:number) => y > 0.5 ? 'Big' : 'Small')
+            );
+            const result = concat(taps,intr)
+            .subscribe(z=>console.log(z));
+        2. Materilized
+            Wraps next, error and complete emissions in Notification objects, emitted as next on the output Observable.
+            const letters = of('a', 'b', 13, 'd');
+            const upperCase = letters.pipe(map(x => x.toUpperCase()));
+            const materialized = upperCase.pipe(materialize());
+            materialized.subscribe(x => console.log(x));
+        3. Timestamp 
+             const letter = of('a','b','c',12,'d');
+                const uppercases = letter.pipe(map((x:any) => x.toUpperCase()),timestamp());
+                uppercases.subscribe(console.log)
+        4. Timeouts on Observable that doesn't emit values fast enough.
+            of(4000,3000,2000).pipe(concatMap(duration => this.makeRequest(duration).pipe(timeout(2500),catchError(error => of(`Request Time out after: ${duration} `))))).subscribe(console.log)
+            private makeRequest(duration:number) {
+             return of('Request Complete').pipe(delay(duration));
+             }
+    COnditional & boolean operator
+        1. Every - If all values pass predicate before the source completes, emits true before completion, otherwise emit false, then complete.
+            of(1,2,3,4,5).pipe(every(x=>x<6)).subscribe(console.log);
+        2. find - Find and emit the first observation
+            from([{name:'ashok',location:'chennai'},{name:'kumar',location:'pondy'},{name:'kumar',location:'trichy'},{name:'arul',location:'chennai'}])
+            .pipe(find(x=>x.name === 'kumar')).subscribe(console.log)
+        3. findIndex - It's like find, but emits the index of the found value,
+            from([{name:'ashok',location:'chennai'},{name:'kumar',location:'pondy'},{name:'kumar',location:'trichy'},{name:'arul',location:'chennai'}])
+            .pipe(findIndex(x=>x.name === 'kumar')).subscribe(console.log)
+        4. isEmpty - Tells whether any values are emitted by an Observable.
+    Subject - A Subject is like an Observable, but can multicast to many Observers. Subjects are like EventEmitters: they maintain a registry of many listeners.
+         private subject = new BehaviorSubject<string>('null');
+            sendMessage(message: string) {
+                this.subject.next( message );
+            }
+
+            clearMessages() {
+                this.subject.next('null');
+            }
+
+            getMessage(): Observable<any> {
+                return this.subject;
+            }
+
+         this.dataService.sendMessage('Message from Home Component to App Component!');
+
+          this.subscription = this.dataService.getMessage().subscribe({
+            next: (v) => console.log(`observerA: ${v}`)
+            });
+
+            
+
+

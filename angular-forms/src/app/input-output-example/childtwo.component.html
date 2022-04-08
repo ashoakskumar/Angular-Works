@@ -1,0 +1,8 @@
+<h3>{{childTitle}}</h3>
+    <p> {{studentMsg}} : {{myStdLeader?.firstName + ' ' + myStdLeader?.lastName}} </p>
+    <b>{{addNumMsg}}</b><br/>
+    <div>
+        First Number :<input (input)="num1=$any($event.target).value"/><br>
+        SecondNumber : <input (input)="num2=$any($event.target).value"/><br>
+        <br><button (click)="addNumber()">Add Number</button>
+    </div>

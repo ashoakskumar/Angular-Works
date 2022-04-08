@@ -1,0 +1,28 @@
+<h3>NG Do Check Example</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr *ngFor="let emp of empArray;let i = index">
+        <td>{{emp.id}}</td><td>{{emp.name}}</td>
+        <td><button (click)="remove(i)">Remove</button></td>
+        <td><button (click)="update(i)">Update</button></td>
+    </tr>
+</table>
+<button (click)="add()">Add</button>
+<h3>Change logs</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <td>
+            <b>Using keyvalue differs</b>
+        </td>
+        <td>
+            <b>Using Iterable differs</b>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <app-emp-key-diff [empArray]="empArray"></app-emp-key-diff>
+        </td>
+        <td>
+            <app-emp-itr-diff [empArray]="empArray"></app-emp-itr-diff>
+        </td>
+    </tr>
+</table>

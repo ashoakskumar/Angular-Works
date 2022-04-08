@@ -1,0 +1,86 @@
+<!-- <h3>Using NGTemplateOutlet</h3> -->
+
+
+<!-- <h3> NG-Template using NG-IF</h3>
+<button type="button" (click)="onToggle1()">Toggle</button>
+<ng-template [ngIf]="toggleFlag1">
+    <p>Hello World!</p>
+</ng-template>
+
+<h3> Ng-Template using ng-if-else</h3>
+<button type="button" (click)="onToggle2()">Toggle2</button>
+<div *ngIf="toggleFlag2; else msgElseBlock">
+    <p>Hello world!</p>
+</div>
+<ng-template #msgElseBlock>
+    <p>Else block:Hello world!</p>
+</ng-template>
+
+<h3> NG-template using ng-if-else-then</h3>
+<button type="button" (click)="onToggle3()">Toggle3</button>
+<div *ngIf="toggleFlag3 then msgThenBlock else msgElseBlock">
+
+</div>
+<ng-template #msgThenBlock>
+    <p>Then block:Hello world!</p>
+</ng-template>
+
+<h3>ng-template using ng-switch-case</h3>
+<input type="radio" name="direction" (click)="myDir='east'"> East
+<input type="radio" name="direction" (click)="myDir='west'"> West
+<input type="radio" name="direction" (click)="myDir='north'"> North
+<input type="radio" name="direction" (click)="myDir='south'"> South
+<div [ngSwitch]="myDir">
+    <ng-template [ngSwitchCase]="'east'">Go to <b>East</b> direction</ng-template>
+    <ng-template [ngSwitchCase]="'west'">Go to <b>West</b> direction</ng-template>
+    <ng-template [ngSwitchCase]="'south'">Go to <b>South</b> direction</ng-template>
+    <ng-template [ngSwitchCase]="'north'">Go to <b>North</b> direction</ng-template>
+    <ng-template ngSwitchDefault><b>No</b> direction</ng-template>
+</div> -->
+
+<!-- <ng-template #welcome>
+    <p>Welcome to everyone</p>
+</ng-template>
+<ng-container *ngTemplateOutlet="welcome"></ng-container>
+<ng-template ngFor let-user [ngForOf]="allUser" let-i="index" [ngForTrackBy]="trackByFn" let-o="odd" let-e="even" let-f="first" let-l="last">
+  <p>{{i}}. {{user.userId}} : {{user.name}}</p> -->
+   <!-- <p>{{l}}</p>
+</ng-template> -->
+
+<h3>Ng-container with ng-if</h3>
+<p>
+    HI! this is ng-container. ..
+    <ng-container *ngIf="isMsgShow">
+        {{msg}}
+    </ng-container>
+</p>
+<h3>Ng-container with ng-for</h3>
+<ul>
+    <ng-container *ngFor="let user of users">
+        <li *ngIf="user.isActive">
+            {{user.name}}
+        </li>
+    </ng-container>
+</ul>
+<h3>Ng-container with ng-switch</h3>
+<div [ngSwitch]="userId">
+    <ng-container *ngSwitchCase="101">Ashok</ng-container>
+    <ng-container *ngSwitchCase="102">Kumar</ng-container>
+</div>
+
+<h3>Ng-Container with ng-template</h3>
+<ng-template #helloTemplate>
+    <p>Hello Template</p>
+</ng-template>
+<ng-container *ngTemplateOutlet="helloTemplate">
+
+</ng-container>
+
+<ng-container *ngTemplateOutlet="book; context: bookContext"></ng-container>
+
+<ng-template #book let-name="bookName" let-writer="writer">
+    <span>
+        This book {{name}} was written by {{writer}}
+    </span>
+</ng-template>
+

@@ -1,0 +1,39 @@
+<p>student-detail works!</p>
+<form [formGroup]="formBuild" (ngSubmit)="onFormSubmit()">
+    
+<table formArrayName = "students"  width="30%" border="1px">
+    <th>Roll No</th>
+    <th>Names</th>
+    <th>Academic Years</th>
+    <tbody *ngIf="student">
+        <tr *ngFor="let std of studentFormArray.controls; let idx=index" [formGroupName]="idx">
+            <td>{{std.value.rollNo}}</td>
+            <td>{{std.value.studentName}}</td>
+            <td formArrayName="academicYears" *ngIf="std.value.academicYears"><span *ngFor="let yr of std.value.academicYears; let id=index" [formGroupName]="id">&nbsp;&nbsp;<a href="javascript:void(0)" *ngIf="yr.value.academicYr"></a>&nbsp;&nbsp;{{yr.value.academicYr}}</span></td>
+        </tr>
+    </tbody>
+    </table>
+
+    <!-- <div formArrayName="students">
+        <div class="container">
+        <div
+            *ngFor="
+            let std of studentFormArray.controls;
+            let teamIndex = index
+          "
+          [formGroupName]="teamIndex" class = "row"
+        >
+        <div class="col">{{teamIndex}}</div>
+        <div class="col">{{teamIndex}}</div>
+        <div class="col" formArrayName="academicYears" *ngIf="std.value.academicYears"><span *ngFor="let yr of std.value.academicYears; let id=index" [formGroupName]="id">&nbsp;&nbsp;{{id}}</span></div>
+        </div></div>
+    </div> -->
+    </form>
+<div *ngIf="showMarkDetails">
+    <app-student-mart-detail [showDetails] = "showStudentOnChildComponent"></app-student-mart-detail>
+</div>
+    
+    
+
+<!-- (click)="getStudentDetails(std.value.rollNo,yr.value.academicYr)"
+{{yr.value.academicYr}} -->

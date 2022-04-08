@@ -1,0 +1,30 @@
+<p>Using Form Control</p>
+<div>
+    <div>
+        Name: <input type="text" [formControl]="name">
+        <label for="name" [ngClass]="'error'" *ngIf="name.invalid"> Name requrired with max 15 character </label>
+    </div>
+    <div>
+        <button (click)="setNameValue()"> Set Value </button>
+        <button (click)="setNameValue()"> Reset </button>
+    </div>
+    <div>
+        Age: <input type="text" [formControl]="age">
+    </div>
+    <div>
+        City: <input type="text" [formControl]="city">
+    </div>
+    <div>
+        Country: <input type="text" [formControl]="country">
+    </div>
+    <div>
+       Married ? <input type="checkbox" [checked] = "married.value" (change) = "changeValue()"> Are you married ?
+    </div>
+</div>
+<div>
+    <p>Name: <b>{{ name.value }}</b>, Validation Status : <b>{{name.status}}</b></p>
+    <p>Age: <b>{{age.value}}</b>, Validation Status: <b>{{age.status}}</b></p>
+    <p>City: <b>{{city.value}}</b></p>
+    <p>Country: <b>{{country.value}}</b></p>
+    <p>Married: <b>{{married.value}}</b></p>
+</div>

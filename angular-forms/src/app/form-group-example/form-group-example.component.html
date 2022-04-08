@@ -1,0 +1,52 @@
+<h3>Form Group Example</h3>
+<div *ngIf="userForm.invalid && !formSubmitted" [ngClass]="'error'">Form not validated.</div>
+<div *ngIf="formSubmitted" [ngClass]="'success'">Form submitted successfully</div><br>
+<div>
+    <form [formGroup]="userForm" (ngSubmit)="onFormSubmit()">
+        <div>
+            Name: <input type="text" formControlName="name" placeholder="Enter Name">
+            <label for="name" *ngIf="userName?.invalid" [ngClass]="'error'">Name is required with max 10 character.</label>
+        </div>
+        <div>
+            Age: <input type="text" formControlName="age" placeholder="Enter Age">
+            <label for="age" *ngIf="userForm.get('age')?.invalid" [ngClass]="'error'">Age is required</label>
+        </div>
+        <div formGroupName="address">
+            <div>
+                House Number: <input type="text" formControlName="houseNumber" placeholder="Enter House Number">
+                <label for="house" *ngIf="userForm.get('address')?.get('houseNumber')?.invalid" [ngClass]="'error'">House Number is required.</label>
+            </div>
+            <div>
+                City: <input type="text" formControlName="city" placeholder="Enter City">
+            </div>
+            <div>
+                Country: <input type="text" formControlName="country" placeholder="Enter Country">
+            </div> </div>
+            <div>
+                Select Gender: <input type="radio" formControlName="gender" value="Male"> Male
+                <input type="radio" formControlName="gender" value="Female"> Female
+            </div>
+            <div>
+                Select Profile:
+                <select formControlName="profile">
+                    <option *ngFor="let pf of profiles" [ngValue]="pf.shortName">{{pf.name}}</option>
+                </select>
+            </div>
+            <div formArrayName="users">
+                <div *ngFor="let user of users.controls;index as idx">
+                    <input type="text" [formControlName]="idx" placeholder="Enter User Name">
+                    <button type="button" (click)="deleteUserField(idx)">Delete</button>
+                </div>
+            </div>
+            <button type="button" (click)="addUserField()">Add More User</button><br><br>
+            <div>
+                <button type="submit">Submit</button>
+                <button type="button" (click)="setAge()">Set Age</button>
+                <button type="button" (click)="setCountry()">Set Country</button>
+                <button type="button" (click)="setDefaultValue()">Set Defaults</button>
+                <button type="button" (click)="resetForm()">Reset Form</button>
+            </div>
+    </form>
+</div>
+<p *ngIf="usrNameChanges">Name: <b>{{usrNameChanges}}</b></p>
+<p *ngIf="usrStatusChanges">Name Status: <b>{{usrStatusChanges}}</b></p>

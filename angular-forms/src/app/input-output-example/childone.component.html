@@ -1,0 +1,17 @@
+<h3>{{childTitle}}</h3>
+             <b>{{ctMsg}}</b>
+             <ul>
+             <li *ngFor="let cname of myctArray">
+             {{cname}}
+             </li>
+             </ul>
+             
+             <b>{{addMsg}}</b><br>
+             <div> 
+                First Name:<input type="text" (input)="student.firstName=$any($event.target).value"/><br>
+                Last Name: <input type="text" (input)="student.lastName=$any($event.target).value"/><br>
+                <button (click)="addStudent()">Add Student</button>
+            </div>
+            <br><b>{{message}}</b><br>
+            <div> Message :<input (input)="msg=$any($event.target).value">
+            <br><button (click)="sendMsg()"> Send</button>

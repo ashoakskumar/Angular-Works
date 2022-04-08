@@ -1,0 +1,20 @@
+import { Injectable } from '@angular/core';
+import { Book } from './book';
+const BOOKS: Book[] = [{"name":"Head First Java", "category":"Java"},
+{"name":"Hibernate in Action","category":"hibernate"},
+{"name":"Thinking in Java","category":"Java"},
+{"name":"Begining Hibernate","category":"HIbernate"},
+{"name":"Effective Java","category":"Java"},
+{"name":"Learning Java","category":"Java"},
+{"name":"Hibernate Recipes", "category":"Hibernate"}];
+@Injectable({
+  providedIn: 'root'
+})
+export class BookService {
+
+  
+  constructor() { }
+  getAllBooks(): Book[] {
+    return BOOKS;
+  }
+}

@@ -1,0 +1,123 @@
+<div class="container mt-5">
+    <form [formGroup]="formGrp" (ngSubmit)="save()">
+    <div class="mb-3">
+        <label class="form-label" for="nameInput">Name:</label>
+        <input type="text" class="form-control" formControlName="name" id="name" placeholder="Enter Name">
+    </div>
+    <div class="mb-3">
+        <label for="dob" class="form-label">DOB:</label>
+        <input type="date" id="dob" formControlName="dob" class="form-control" placeholder="Enter DOB">
+    </div>
+    <div class="mb-3">
+        <label for="Gender" class="form-label">Gender:</label>
+        <div class="form-check">
+            <input type="radio" id="Male" formControlName="gender" value="male" class="form-check-input">
+            <label for="male" class="form-check-label">Male</label>
+        </div>
+        <div class="form-check">
+            <input type="radio" id="female" formControlName="gender" value="female" class="form-check-input">
+            <label for="female" class="female-check-label">Female</label>
+        </div>
+
+    </div>
+    <div class="mb-3">
+        <label for="location">Location:</label>
+        <select name="location" id="location" class="form-select" formControlName="location">
+            <option value="0">Select Menu</option>
+            <option *ngFor="let val of locVal;let id = index" [ngValue]="val">{{val}}</option>
+        </select>
+    </div>
+    <div formArrayName="address">
+        <div class="mb-3 bd-example" *ngFor="let addr of address.controls;let idx=index" [formGroupName]="idx">
+          <div class="row g-3">
+            <div class="col">
+                <label for="state" class="form-label">State:</label>
+                <input type="text" class="form-control" formControlName="state">
+            </div>
+            <div class="col">
+                <label for="country" class="form-label">Country:</label>
+                <input type="text" class="form-control" formControlName="country">
+            </div>
+        </div>
+        </div>
+
+    </div>
+    <div class="mb-3">
+       <span class="me-3"> <button type="button" class="btn btn-primary" (click)="addAddress()">Add address</button></span>
+       <span class="me-3"><button type="submit" class="btn btn-primary"> Submit</button></span>
+       <span class="me-3"><button type="button" class="btn btn-primary" (click)="callPatch()"> Patch</button></span>
+       <span class="me-3"><button type="button" class="btn btn-primary" (click)="callPut()"> Put</button></span>
+       <span class="me-3"><button type="button" class="btn btn-primary" (click)="callError()"> Show Error</button></span>
+    </div>
+</form>
+<!-- <div *ngIf="submitted">
+    <div class="row">
+        <div class="col-md-8">
+            <p>
+                Name: {{this.formGrp.get('name')?.value | repeatPipe : 10}}</p>
+                <p>   DOB: {{this.formGrp.get('dob')?.value | date: 'long' | uppercase}}</p>
+                    <p>  Gender: {{this.formGrp.get('gender')?.value}}</p>
+                        <p>  Location: {{this.formGrp.get('location')?.value | lowercase}}
+
+            </p>
+            <p>{{this.formGrp.value | json}}</p>
+            <p>{{this.money | currency : 'EUR': 'symbol' : '10.0-3'}}</p>
+        </div>
+    </div>
+</div>
+<div *ngIf="person">
+    <div class="row">
+        <div class="col-md-8">
+            <p>
+                Name: {{person.name}}</p>
+                <p>   DOB: {{person.dob}}</p>
+                    <p>  Gender: {{person.gender}}</p>
+                        <p>  Location: {{person.location}}
+
+            </p>
+            <p>{{person | json}}</p>
+            <p>{{this.money | currency : 'EUR': 'symbol' : '10.0-3'}}</p>
+        </div>
+    </div>
+</div> -->
+<div class="row">
+    <div class="col-8">
+        <label for="fileControl" class="btn btn-default p-0">
+            <input type="file" multiple (change)="selectFiles($event)">
+        </label>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-success btn-sm" (click)="uploadFiles()">
+            Upload
+        </button>
+    </div>
+</div>
+<div *ngFor="let progressInfo of progressInfos" class="my-2">
+    <span>{{progressInfo.fileName}}</span>
+    <div class="progress">
+    <div class="progress-bar progress-bar-info progress-bar-stripped" role="progressbar" attr.aria-valuenow="{{progressInfo.value}}" 
+    aria-valuemin="0" aria-valuemax="100" [ngStyle]="{width : progressInfo.value + '%'}"> 
+    {{progressInfo.value}} %
+    </div>
+</div>
+</div>
+<div *ngIf="message.length" class="alert alert-secondary my-3" role="alert">
+    <ul *ngFor="let msg of message">
+        <li> {{msg}}</li>
+    </ul>
+   </div>
+<div class="card mt-3">
+    <div class="card-header">
+        List of Files
+    </div>
+    <ul class="list-group list-group-flash" *ngFor="let file of fileInfos | async">
+
+        <li class="list-group-item">
+            <a href="{{file?.url}}">{{file?.name}}</a>
+        </li>
+    </ul>
+</div>
+
+</div>
+
+

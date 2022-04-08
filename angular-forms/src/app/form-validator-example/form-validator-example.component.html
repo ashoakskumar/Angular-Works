@@ -1,0 +1,69 @@
+<h3>User Form</h3>
+<form [formGroup]="userForm" (ngSubmit)="onFormSubmit()">
+    <table>
+        <tr>
+            <td>
+                Full Name:
+            </td>
+            <td>
+                <input type="text" formControlName="fullName">
+                <div *ngIf="fullName?.dirty && fullName?.errors" class="error">
+                    <div *ngIf="fullName?.errors?.required">
+                        Full Name Required
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                User Name:
+            </td>
+            <td>
+                <input type="text" formControlName="userName">
+                <div *ngIf="userName?.dirty && userName?.errors" class="error">
+                    <div *ngIf="userName?.errors?.required">
+                        User Name Required
+                    </div>
+                    <div *ngIf="userName?.errors?.maxlength">
+                        Maximum length should be 10
+                    </div>
+                    <div *ngIf="userName?.errors?.minlength">
+                        Minimum length should be 5
+                    </div>
+                    <div *ngIf="userName?.errors?.usernameExists">
+                        UserName already exists
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Password
+            </td>
+            <td>
+                <input type="password" formControlName="password">
+                <div *ngIf="password?.dirty && password?.errors" class="error">
+                    <div *ngIf="password?.errors?.required">
+                        Password is required
+                    </div>
+                    <div *ngIf="password?.errors?.minlength">
+                        Minimum length should be 5
+                    </div>
+                    <div *ngIf="password?.errors?.maxlength">
+                        Maximim length should be 10 
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" [disabled]="userForm.invalid">Submit</button><br>
+                <button type="button" (click)="addValidators()">Add Validators</button>
+                <button type="button" (click)="addAsyncValidators()">Add Async Validators</button>
+                <button type="button" (click)="clearUserValidators()">Clear Validators </button>
+                <button type="button" (click)="clearUserAsyncValidators()">Clear Async Validators </button>
+                
+            </td>
+        </tr>
+    </table>
+</form>

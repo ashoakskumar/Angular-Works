@@ -1,0 +1,16 @@
+{
+    "name": "ashok",
+    "dob": "2022-03-14",
+    "gender": "male",
+    "location": "TN",
+    "address": [
+        {
+            "state": "Tamil Nadu",
+            "country": "India"
+        },
+        {
+            "state": "Tamil Nadu",
+            "country": "India"
+        }
+    ]
+}
